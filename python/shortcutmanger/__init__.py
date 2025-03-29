@@ -2,14 +2,13 @@
 Shortcut Manager
 ~~~~~~~~~~~~~~
 
-an advance asyncio database wrapper
-
-:copyright: (c) 2025 iVoid1
-
-:license: MIT, see LICENSE for more details.
+A simple shortcut manager for Windows, Linux, and MacOS.
+This package provides a simple way to create and manage shortcuts on different operating systems.
+It supports creating shortcuts for files, folders, and applications, and allows you to specify custom icons and other properties.
+It also provides a simple command-line interface for creating and managing shortcuts.
 """
 
-__title__ = "hyper-database"
+__title__ = "shortcutmanger"
 __author__ = "iVoid1"
 __license__ = "MIT"
 __copyright__ = "Copyright 2025 iVoid1"

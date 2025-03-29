@@ -1,10 +1,2 @@
-
-
-
-def main():
-    pass
-
-
-
-if __name__ == '__main__':
-    main()
+if {} is None:
+    print("An empty dictionary is passed.")
