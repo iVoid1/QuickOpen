@@ -10,8 +10,6 @@ It also provides a simple command-line interface for creating and managing short
 
 __title__ = "shortcutmanger"
 __author__ = "iVoid1"
-__license__ = "MIT"
-__copyright__ = "Copyright 2025 iVoid1"
 # Placeholder, modified by dynamic-versioning.
 __version__ = "0.0.0"
 

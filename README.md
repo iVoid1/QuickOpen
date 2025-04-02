@@ -5,13 +5,14 @@ A versatile tool for managing keyboard shortcuts across different platforms, wit
 ## 🌟 Implementations
 
 ### Python Version
+
 - Global keyboard event capture
 - Custom action mapping
 - JSON configuration
 - Background operation
-- CLI interface
 
 ### C# Version (Windows Forms)
+
 - System-wide shortcut detection
 - Modern Windows Forms UI
 - System tray integration
@@ -21,6 +22,7 @@ A versatile tool for managing keyboard shortcuts across different platforms, wit
 ## 🚀 Quick Start
 
 ### Python Implementation
+
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -30,6 +32,7 @@ python shortcutmanager.py
 ```
 
 ### C# Implementation
+
 ```powershell
 # Build solution
 dotnet build
@@ -43,17 +46,17 @@ dotnet run
 ```
 Shortcut-Manager/
 ├── python/
-│   ├── src/
-│   │   ├── core/
-│   │   └── utils/
+│   ├── shortcutmanager/
+│   │   ├── module/
+│   │   └── scripts/
 │   ├── tests/
 │   └── requirements.txt
 │
 ├── csharp/
 │   ├── Shortcut-ManagerWFA/
-│   │   ├── Forms/
-│   │   ├── Core/
-│   │   └── Utils/
+|   |
+|   |── Shortcut-ManagerWPF/
+|   |
 │   └── Tests/
 │
 └── docs/
@@ -64,6 +67,7 @@ Shortcut-Manager/
 ## 🛠️ Development Setup
 
 ### Prerequisites
+
 - Python 3.8+
 - .NET 6.0+
 - Visual Studio 2022 or VS Code
@@ -72,13 +76,14 @@ Shortcut-Manager/
 ### Required Packages
 
 #### Python
+
 ```txt
 keyboard>=0.13.5
 pynput>=1.7.6
-PyYAML>=6.0
 ```
 
 #### C# (NuGet)
+
 ```xml
 <PackageReference Include="InputSimulator" Version="1.0.4" />
 <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -87,18 +92,27 @@ PyYAML>=6.0
 ## 💡 Usage Examples
 
 ### Python Configuration
+
 ```json
 {
-  "shortcuts": {
-    "ctrl+alt+n": {
-      "action": "launch_app",
-      "target": "notepad.exe"
+    "Ctrl+Alt+N":
+    {
+        "id": 1,
+        "name": "Open vscode",
+        "command": "Code.exe"
+    },
+
+    "Ctrl+Shift+B":
+    {
+        "id": 2,
+        "name": "Open Browser",
+        "command": "Arc.exe"
     }
-  }
 }
 ```
 
 ### C# Implementation
+
 ```csharp
 shortcutManager.RegisterShortcut(
     Keys.Control | Keys.Alt | Keys.N,
@@ -109,24 +123,18 @@ shortcutManager.RegisterShortcut(
 ## 🔄 Features
 
 ### Common Features
+
 - Global shortcut detection
 - Custom action mapping
 - Configuration persistence
 - Background operation
 
 ### Platform-Specific Features
+
 - Python: Cross-platform support
 - C#: Windows integration
 - System tray operations (C#)
 - GUI interface (C#)
-
-## 📋 Roadmap
-
-- [ ] Cloud synchronization
-- [ ] Macro recording
-- [ ] Plugin system
-- [ ] Cross-platform GUI
-- [ ] Mobile companion app
 
 ## 🤝 Contributing
 
@@ -146,11 +154,8 @@ shortcutManager.RegisterShortcut(
 ## 🐛 Issue Tracking
 
 Report bugs and request features through:
+
 - [GitHub Issues](https://github.com/iVoid1/Shortcut-Manager/issues)
-
-## 📄 License
-
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
 
 ## 📫 Contact
 
