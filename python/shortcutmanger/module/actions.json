@@ -1,0 +1,15 @@
+{
+    "Ctrl+Alt+N":
+    {
+        "id": 1,
+        "name": "Open vscode",
+        "command": "Code.exe"
+    },
+
+    "Ctrl+Shift+B":
+    {
+        "id": 2,
+        "name": "Open Browser",
+        "command": "Arc.exe"
+    }
+}

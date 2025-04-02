@@ -1,51 +1,59 @@
-from pathlib import Path
 from keyboard import KeyboardEvent
 import keyboard
 from pynput.keyboard import Key, KeyCode
-from module.config import Config
+import asyncio
 
 class KeyReader:
-    
-    def __init__(self, config_file:Path|str = "module\\config.json",):
-        self.last_pressed_key:str = ""
-        self.pressed_keys_list:list[str] = []
-        self.currently_pressed_keys:list[str] = []  # Track currently pressed keys
-        
-        self.is_initialized:bool = False
-        self.config_file: Path|str = config_file
-        
-    def read_key(self, target_key: Key | KeyCode | str = "esc"):
-        
-        keyboard.hook(self.on_key_event)  # Hook into all keyboard events
-        while self.last_pressed_key != target_key:            
-            try:
-                if isinstance(target_key, Key):
-                    keyboard.wait(target_key.name)
-                    break
-                if isinstance(target_key, KeyCode):
-                    keyboard.wait(target_key.char)
-                    break 
-                keyboard.wait(target_key)
-                break
-            except KeyboardInterrupt:
-                pass
-    def on_key_event(self, key_event:KeyboardEvent):
-        if key_event.name != None:
-            if key_event.event_type == "down":  # When a key is pressed
-                self.last_pressed_key = key_event.name  # Store the key pressed
+    @staticmethod
+    def get_key(key: Key | KeyCode | str) -> str | None:
+        return key.name if isinstance(key, Key) else key.char if isinstance(key, KeyCode) else key or None
 
-                if key_event.name not in self.currently_pressed_keys:  # Avoid duplicates
-                    self.pressed_keys_list.append(key_event.name)  # Track all pressed keys
-                    self.currently_pressed_keys.append(key_event.name)  # Add to active keys list
-                    config = Config(self.config_file)
-                    config.get_config(" ".join(self.currently_pressed_keys))
-            elif key_event.event_type == "up" and key_event.name in self.currently_pressed_keys:  
-                # When a key is released, remove it from the active keys list
-                self.currently_pressed_keys.remove(key_event.name)
-            
-def main() -> None:
-    if __name__ == "__main__":
-        key_reader = KeyReader()
-        key_reader.read_key("esc")
+    def __init__(self):
+        self.last_key: str = ""
+        self.pressed: list[str] = []
+        self.active_keys: list[str] = []  # Track currently pressed keys
+        self.active_keys_str: str = ""
+        self.init: bool = False
 
-main()
+    async def read_key(self, stop_key: Key | KeyCode | str = "esc", func=None):
+        """Reads keys asynchronously until stop_key is pressed."""
+        key = self.get_key(stop_key)
+        loop = asyncio.get_running_loop()
+
+        # Hook into all keyboard events
+        keyboard.hook(lambda event: self.on_key_event(event, func))
+        try:
+            while self.last_key != key:
+                await asyncio.sleep(0.1)  # Allow event loop to run
+        except :
+            pass
+        print("Stopping key reader...")
+
+    def on_key_event(self, key_event: KeyboardEvent, func):
+        """Handles key events."""
+        if key_event.name is None:
+            return
+
+        if func:
+            func()  # Call the function safely if provided
+
+        if key_event.event_type == "down":  # When a key is pressed
+            self.last_key = key_event.name  # Store the key pressed
+            self.pressed.append(key_event.name)  # Track all pressed keys
+            if key_event.name not in self.active_keys:
+                self.active_keys.append(key_event.name)  # Add to active keys
+            self.active_keys_str += key_event.name
+
+        elif key_event.event_type == "up" and key_event.name in self.active_keys:
+            self.active_keys.remove(key_event.name)  # Remove released key
+
+    def clear(self):
+        """Clears all stored keys."""
+        self.last_key = ""
+        self.pressed = []
+        self.active_keys = []
+        self.active_keys_str = ""
+
+    def is_key_pressed(self, key: Key | KeyCode | str) -> bool:
+        """Checks if a key is currently pressed."""
+        return self.get_key(key) in self.active_keys
