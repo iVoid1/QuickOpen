@@ -1,15 +1,15 @@
 {
-    "Ctrl+Alt+N":
+    "ctrl shift alt m":
     {
         "id": 1,
         "name": "Open vscode",
         "command": "Code.exe"
     },
 
-    "Ctrl+Shift+B":
+    "ctrl shift b":
     {
         "id": 2,
         "name": "Open Browser",
-        "command": "Arc.exe"
+        "command": "C:\\Users\\Public\\Desktop\\Zen.lnk"
     }
 }

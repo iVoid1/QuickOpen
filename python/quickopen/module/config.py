@@ -4,6 +4,7 @@ from typing import Any, Type
 
 
 class Config:
+    """A class for managing configuration files."""
     @staticmethod
     def get_item(List:list[Any]|None, index:int) -> Any|None:
         return List[index] if List != None and index < len(List) and index >= -len(List) else None

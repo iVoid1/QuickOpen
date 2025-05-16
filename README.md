@@ -1,23 +1,13 @@
-# Shortcut Manager 🎮
+# QuickOpen ⚡
 
-A versatile tool for managing keyboard shortcuts across different platforms, with implementations in both Python and C#.
+A versatile tool for managing keyboard shortcuts across different platforms, implementation in Python.
 
-## 🌟 Implementations
-
-### Python Version
+## 🌟 Implementation
 
 - Global keyboard event capture
 - Custom action mapping
 - JSON configuration
 - Background operation
-
-### C# Version (Windows Forms)
-
-- System-wide shortcut detection
-- Modern Windows Forms UI
-- System tray integration
-- Persistent settings
-- Action automation
 
 ## 🚀 Quick Start
 
@@ -28,40 +18,21 @@ A versatile tool for managing keyboard shortcuts across different platforms, wit
 pip install -r requirements.txt
 
 # Run application
-python shortcutmanager.py
-```
-
-### C# Implementation
-
-```powershell
-# Build solution
-dotnet build
-
-# Run application
-dotnet run
+python main.py
 ```
 
 ## 📁 Project Structure
 
 ```
-Shortcut-Manager/
+QucikOpen/
 ├── python/
-│   ├── shortcutmanager/
+│   ├── quickopen/
 │   │   ├── module/
 │   │   └── scripts/
-│   ├── tests/
+│   ├── test.py
 │   └── requirements.txt
-│
-├── csharp/
-│   ├── Shortcut-ManagerWFA/
-|   |
-|   |── Shortcut-ManagerWPF/
-|   |
-│   └── Tests/
-│
 └── docs/
-    ├── Python.md
-    └── CSharp.md
+    └── Python.md
 ```
 
 ## 🛠️ Development Setup
@@ -69,8 +40,6 @@ Shortcut-Manager/
 ### Prerequisites
 
 - Python 3.8+
-- .NET 6.0+
-- Visual Studio 2022 or VS Code
 - Git
 
 ### Required Packages
@@ -80,13 +49,6 @@ Shortcut-Manager/
 ```txt
 keyboard>=0.13.5
 pynput>=1.7.6
-```
-
-#### C# (NuGet)
-
-```xml
-<PackageReference Include="InputSimulator" Version="1.0.4" />
-<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 ```
 
 ## 💡 Usage Examples
@@ -111,15 +73,6 @@ pynput>=1.7.6
 }
 ```
 
-### C# Implementation
-
-```csharp
-shortcutManager.RegisterShortcut(
-    Keys.Control | Keys.Alt | Keys.N,
-    () => Process.Start("notepad.exe")
-);
-```
-
 ## 🔄 Features
 
 ### Common Features
@@ -128,13 +81,6 @@ shortcutManager.RegisterShortcut(
 - Custom action mapping
 - Configuration persistence
 - Background operation
-
-### Platform-Specific Features
-
-- Python: Cross-platform support
-- C#: Windows integration
-- System tray operations (C#)
-- GUI interface (C#)
 
 ## 🤝 Contributing
 
@@ -146,10 +92,7 @@ shortcutManager.RegisterShortcut(
 
 ## 📚 Documentation
 
-- [Python Documentation](docs/Python.md)
-- [C# Documentation](docs/CSharp.md)
-- [API Reference](docs/API.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
+[Python Documentation](docs/Python.md)
 
 ## 🐛 Issue Tracking
 
@@ -164,4 +107,4 @@ Report bugs and request features through:
 
 ---
 
-Made with ❤️ by [iVoid1]
+Made with by iVoid1
