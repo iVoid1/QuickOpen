@@ -1,32 +1,45 @@
 import keyboard
-import pynput.keyboard as pKeyboard
-import quickopen.module.config as config
+from typing import Callable, Dict
+from quickopen.module.config import Config 
 import subprocess
-quick = 2
+config = Config(r"C:\Users\Void\Google_Drive\QuickOpen\QuickOpen\python\quickopen\module\actions.json")
 
+class HotkeyManager:
+    def __init__(self, config_file: Config = config):
+        self.actions: Config = config_file
+        self.hotkeys = ""
+    def read_hotkey(self) -> str:
+        """Read a hotkey from the user"""
+        self.hotkeys = keyboard.read_hotkey()
+        return self.hotkeys
+    
+    def run_task(self, combo: str) -> None:
+        """Add a new hotkey with its callback function"""
+        if combo in self.actions.config:
+            subprocess.run([self.actions.get_config(combo)['command']], shell=True)
+        
+    def remove_hotkey(self, combo: str) -> None:
+        """Remove a hotkey"""
+        if combo in self.actions:
+            keyboard.remove_hotkey(combo)
+            del self.actions[combo]
 
-configure = config.Config(r"C:\Users\Void\Google_Drive\QuickOpen\python\quickopen\module\actions.json")
-keys = []
-def search_action(key: keyboard.KeyboardEvent) -> None:
-    """Handles key events."""
-    if key.name is None:
-        return       
-    key.name = key.name.lower()
-    if key.event_type == "down":  # When a key is pressed
-
-        if key.name not in keys:
-            keys.append(key.name)  # Add to active keys
-            command = configure.get_config(" ".join(keys))["command"] if configure.get_config(" ".join(keys)) != None else None
-            print(command)
+    def clear_all_hotkeys(self) -> None:
+        """Remove all registered hotkeys"""
+        for combo in list(self.actions.keys()):
+            self.remove_hotkey(combo)
             
-            subprocess.run([command], shell=True) if command != None else None
+    def add_hotkey(self, combo: str, func: Callable[[], None]) -> None:
+        """Add a new hotkey with its callback function"""
+        keyboard.add_hotkey(combo, func)
 
+def main():
+    manager = HotkeyManager()
+    combo = keyboard.read_hotkey()
+    manager.add_hotkey(combo, )
 
-
-    elif key.event_type == "up" and key.name in keys:
-        keys.remove(key.name)  # Remove released key
-
-    print(keys)
-while True:
-    keyboard.hook(lambda event: search_action(event))
-    keyboard.wait()
+if __name__ == "__main__":
+    # main()
+    pass
+combo = keyboard.read_hotkey()
+print(combo)

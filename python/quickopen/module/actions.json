@@ -1,15 +1,17 @@
 {
-    "ctrl shift alt m":
-    {
+    "ctrl+alt+shift+M": {
         "id": 1,
-        "name": "Open vscode",
-        "command": "Code.exe"
+        "name": "Open Browser",
+        "command": "C:\\Users\\Public\\Desktop\\Zen.lnk"
     },
-
-    "ctrl shift b":
-    {
+    "ctrl+alt+d": {
         "id": 2,
         "name": "Open Browser",
         "command": "C:\\Users\\Public\\Desktop\\Zen.lnk"
+    },
+    "ctrl+alt+shift+C": {
+        "id": 3,
+        "name": "VS Code",
+        "command": "code"
     }
 }

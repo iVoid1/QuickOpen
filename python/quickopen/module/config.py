@@ -1,3 +1,4 @@
+import sys
 import json
 import typing
 from typing import Any, Type
@@ -31,10 +32,10 @@ class Config:
             
         except FileNotFoundError:
             print(f"Config file {self.file_name} not found. Create a new one!")
-            return None
+            sys.exit()
         except json.JSONDecodeError:
             print(f"Error decoding {self.file_name}. Using an empty config.")
-            return None
+            sys.exit()
 
     def get_config(self, key_index:Any|int, default:Any = None) -> Any:
         """Retrieves a value from the config using a key (for dicts) or index (for lists)."""
@@ -131,3 +132,6 @@ class Config:
             return None
         self.save_config() if self.auto_save else None
         return self.config
+    
+    def items(self) -> dict[Any, Any]|list[Any]|None:
+        return self.config.items() if isinstance(self.config, dict) else self.config
