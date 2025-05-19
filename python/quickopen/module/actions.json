@@ -1,17 +1,62 @@
 {
-    "ctrl+alt+shift+M": {
-        "id": 1,
-        "name": "Open Browser",
-        "command": "C:\\Users\\Public\\Desktop\\Zen.lnk"
+    "ctrl+alt+t": {
+        "type": "app",
+        "command": "wt.exe",
+        "description": "Open Windows Terminal"
     },
-    "ctrl+alt+d": {
-        "id": 2,
-        "name": "Open Browser",
-        "command": "C:\\Users\\Public\\Desktop\\Zen.lnk"
+    "ctrl+alt+v": {
+        "type": "app",
+        "command": "code",
+        "description": "Open VS Code"
     },
-    "ctrl+alt+shift+C": {
-        "id": 3,
-        "name": "VS Code",
-        "command": "code"
+    "ctrl+alt+n": {
+        "type": "app",
+        "command": "notepad",
+        "description": "Open Notepad"
+    },
+    "ctrl+alt+b": {
+        "type": "app",
+        "command": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "description": "Open Chrome Browser"
+    },
+    "ctrl+alt+e": {
+        "type": "app",
+        "command": "explorer.exe",
+        "description": "Open File Explorer"
+    },
+    "ctrl+shift+s": {
+        "type": "folder",
+        "path": "%USERPROFILE%\\Documents\\Scripts",
+        "description": "Open Scripts folder"
+    },
+    "ctrl+shift+d": {
+        "type": "folder",
+        "path": "%USERPROFILE%\\Downloads",
+        "description": "Open Downloads folder"
+    },
+    "ctrl+alt+l": {
+        "type": "system",
+        "command": "rundll32.exe user32.dll,LockWorkStation",
+        "description": "Lock Windows"
+    },
+    "ctrl+shift+m": {
+        "type": "multimedia",
+        "command": "play/pause",
+        "description": "Play/Pause Media"
+    },
+    "alt+1": {
+        "type": "website",
+        "url": "https://github.com",
+        "description": "Open GitHub"
+    },
+    "alt+2": {
+        "type": "website",
+        "url": "https://chat.openai.com",
+        "description": "Open ChatGPT"
+    },
+    "ctrl+alt+c": {
+        "type": "clipboard",
+        "text": "your.email@example.com",
+        "description": "Copy email to clipboard"
     }
 }

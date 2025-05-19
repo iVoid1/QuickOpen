@@ -5,82 +5,63 @@ import asyncio
 
 class Listener:
     def __init__(self):
-        self.last_key = ""
-        self.pressed = []
-        self.active_keys = []
-        self.active_keys_str = ""
-        self.init = False
-        self.hook = None
-
+        self.active_keys: list[str] = []
+        self.current_hotkey = ""
+        self._hook = None
+    
     # --- Core Methods ---
     
-    def read_hotkey(self) -> str:
-        """Read a hotkey from the user"""
-        self.hotkeys = keyboard.read_hotkey()
-        return self.hotkeys
+    async def read_hotkey_async(self, stop_key: str = "alt+esc", clear: bool = True):
+        """Asynchronously read a hotkey until stop_key is pressed."""
+        while self.current_hotkey != stop_key:
+            if clear:
+                self.clear_keys()
+            self.current_hotkey = keyboard.read_hotkey()
+            await asyncio.sleep(0.1)
 
-    async def read_key(self, stop_key: str = "alt+esc", func: Callable[[], None] | None = None):
-        """Reads keys asynchronously until stop_key is pressed."""
-        if not self.init:
-            self.clear()
-            self.init = True
+    def read_hotkey(self, stop_key: str = "alt+esc", callback: Callable[[], None] | None = None):
+        """Read keys until stop_key is pressed."""
+        while self.current_hotkey != stop_key:
+            keyboard.hook(lambda event: self.handle_event(event, callback))
+            keyboard.unhook_all()
 
-        print("Started listening...")
-
-        # Set up a single persistent hook
-        self.hook = keyboard.hook(lambda event: self.on_key_event(event, func))
-
-        try:
-            while "+".join(self.active_keys_str) != stop_key:
-                await asyncio.sleep(0.05)
-        finally:
-            keyboard.unhook(self.hook)
-            print("Stopping key reader...")
-
-    def on_key_event(self, key_event: KeyboardEvent, func: Callable[[], None] | None):
-        """Handles key events."""
-        if key_event.name is None:
+    def handle_event(self, event: KeyboardEvent, callback: Callable[[], None] | None = None):
+        """Handle a keyboard event."""
+        if event.name is None:
             return
 
-        if func is not None:
-            func()
+        if callback:
+            callback()
 
-        if key_event.event_type == "down":
-            self.last_key = key_event.name
-            self.pressed.append(key_event.name)
+        if event.event_type == "down":
+            if event.name not in self.active_keys:
+                self.active_keys.append(event.name)
+        elif event.event_type == "up":
+            if event.name in self.active_keys:
+                self.active_keys.remove(event.name)
 
-            if key_event.name not in self.active_keys:
-                self.active_keys.append(key_event.name)
-                self.active_keys_str = "+".join(self.active_keys)
+        clean_keys = [k for k in self.active_keys if k]
+        try:
+            self.current_hotkey = keyboard.get_hotkey_name(clean_keys)
+            print(self.current_hotkey)
+        except ValueError:
+            pass
 
-        elif key_event.event_type == "up":
-            if key_event.name in self.active_keys:
-                self.active_keys.remove(key_event.name)
-                self.active_keys_str = "+".join(self.active_keys)
-
-    def clear(self):
-        self.last_key = ""
-        self.pressed = []
+    def clear_keys(self):
+        """Clear all active keys and reset the current hotkey."""
         self.active_keys = []
-        self.active_keys_str = ""
+        self.current_hotkey = ""
 
-     # --- Utility / Future Methods ---
+    # --- Utility Methods ---
 
-    def was_key_pressed(self, key: str) -> bool:
-        """Check if a key was pressed during session."""
-        return key in self.pressed
-
-    def get_active_keys(self) -> list[str]:
-        """Return currently held down keys."""
+    def get_current_keys(self) -> list[str]:
+        """Return a copy of the currently held down keys."""
         return self.active_keys.copy()
 
     async def wait_for_combo(self, combo: str, timeout: float = 10.0) -> bool:
-        """Wait for a combo to be pressed within a timeout."""
-        print(f"Waiting for {combo} for {timeout} seconds...")
+        """Wait for a specific combo to be pressed within a timeout."""
         end_time = asyncio.get_event_loop().time() + timeout
         while asyncio.get_event_loop().time() < end_time:
-            if self.active_keys_str == combo:
-                return True
             await asyncio.sleep(0.05)
         return False
 
@@ -92,25 +73,13 @@ class Listener:
         """Simulate pressing and releasing a key."""
         keyboard.press_and_release(key)
 
-    def get_combo_history(self) -> list[str]:
-        """Return a list of combos that were pressed."""
-        combos = []
-        combo = []
-        for key in self.pressed:
-            combo.append(key)
-            if len(combo) > 1:
-                combos.append("+".join(combo))
-        return combos
-
     def pause_listening(self):
-        """Temporarily pause keyboard listening."""
-        if self.hook:
-            keyboard.unhook(self.hook)
-            self.hook = None
-            print("Listener paused.")
+        """Pause keyboard listening."""
+        if self._hook:
+            keyboard.unhook(self._hook)
+            self._hook = None
 
-    def resume_listening(self, func: Callable[[], None] | None = None):
+    def resume_listening(self, callback: Callable[[], None] | None = None):
         """Resume keyboard listening."""
-        if not self.hook:
-            self.hook = keyboard.hook(lambda event: self.on_key_event(event, func))
-            print("Listener resumed.")
+        if not self._hook:
+            self._hook = keyboard.hook(lambda event: self.handle_event(event, callback))

@@ -8,7 +8,7 @@ It supports creating shortcuts for files, folders, and applications, and allows 
 It also provides a simple command-line interface for creating and managing shortcuts, allowing users to add, remove, or list shortcuts easily. For example, you can use the command `quickopen add "MyApp" "C:\\Path\\To\\App.exe"` to create a shortcut for an application.
 """
 
-__title__ = "shortcutmanger"
+__title__ = "QuickOpen"
 __author__ = "iVoid1"
 # Placeholder, modified by dynamic-versioning.
 __version__ = "0.0.0"

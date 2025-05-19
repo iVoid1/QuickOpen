@@ -1,45 +1,33 @@
 import keyboard
-from typing import Callable, Dict
-from quickopen.module.config import Config 
-import subprocess
-config = Config(r"C:\Users\Void\Google_Drive\QuickOpen\QuickOpen\python\quickopen\module\actions.json")
 
-class HotkeyManager:
-    def __init__(self, config_file: Config = config):
-        self.actions: Config = config_file
-        self.hotkeys = ""
-    def read_hotkey(self) -> str:
-        """Read a hotkey from the user"""
-        self.hotkeys = keyboard.read_hotkey()
-        return self.hotkeys
-    
-    def run_task(self, combo: str) -> None:
-        """Add a new hotkey with its callback function"""
-        if combo in self.actions.config:
-            subprocess.run([self.actions.get_config(combo)['command']], shell=True)
-        
-    def remove_hotkey(self, combo: str) -> None:
-        """Remove a hotkey"""
-        if combo in self.actions:
-            keyboard.remove_hotkey(combo)
-            del self.actions[combo]
+class kkk:
+    def __init__(self):
+        self.keys = []
 
-    def clear_all_hotkeys(self) -> None:
-        """Remove all registered hotkeys"""
-        for combo in list(self.actions.keys()):
-            self.remove_hotkey(combo)
-            
-    def add_hotkey(self, combo: str, func: Callable[[], None]) -> None:
-        """Add a new hotkey with its callback function"""
-        keyboard.add_hotkey(combo, func)
+    def do(self, event: keyboard.KeyboardEvent):
+        key = event.name
 
-def main():
-    manager = HotkeyManager()
-    combo = keyboard.read_hotkey()
-    manager.add_hotkey(combo, )
+        if event.event_type == "down":
+            if key and key not in self.keys:
+                self.keys.append(key)
 
-if __name__ == "__main__":
-    # main()
-    pass
-combo = keyboard.read_hotkey()
-print(combo)
+        elif event.event_type == "up":
+            if key in self.keys:
+                self.keys.remove(key)
+
+        # فلترة المفاتيح الفاضية قبل استخدامها
+        clean_keys = [k for k in self.keys if k]
+        try:
+            combo = keyboard.get_hotkey_name(clean_keys)
+            keys_split = combo.split('+') if combo else []
+            print(keys_split)
+        except ValueError as e:
+            print("⚠️ حدث خطأ:", e)
+
+    def did(self):
+        keyboard.hook(self.do)
+        keyboard.wait("esc")
+        print("Final keys:", self.keys)
+
+k = kkk()
+k.did()

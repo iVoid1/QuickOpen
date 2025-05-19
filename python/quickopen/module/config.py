@@ -133,5 +133,7 @@ class Config:
         self.save_config() if self.auto_save else None
         return self.config
     
-    def items(self) -> dict[Any, Any]|list[Any]|None:
-        return self.config.items() if isinstance(self.config, dict) else self.config
+    def items(self) -> list[Any]|None:
+        if self.config == None:
+            return None
+        return list(self.config.items()) if isinstance(self.config, dict) else self.config
