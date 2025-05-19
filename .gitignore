@@ -42,3 +42,4 @@ csharp
 .vscode
 *.pyc
 *copy*
+copies
