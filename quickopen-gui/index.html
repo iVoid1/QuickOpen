@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>QuickOpen</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Quick Open</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>QuickOpen GUI</h1>
-  <button onclick="triggerHotkey()">Test Hotkey</button>
+  <div id="app">
+    <h1>🔍 Quick Open</h1>
+    <input type="text" id="search" placeholder="search" />
+    <table id="shortcuts">
+      <thead>
+        <tr>
+          <th>Shortcut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="shortcut-body"></tbody>
+    </table>
+    <div class="buttons">
+      
+    </div>
+  </div>
+
   <script src="renderer.js"></script>
 </body>
 </html>

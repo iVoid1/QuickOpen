@@ -29,5 +29,3 @@ class kkk:
         keyboard.wait("esc")
         print("Final keys:", self.keys)
 
-k = kkk()
-k.did()

@@ -1,38 +1,44 @@
 # QuickOpen ⚡
 
-A versatile tool for managing keyboard shortcuts across different platforms, implementation in Python.
+A versatile asynchronous keyboard shortcut manager with configurable actions, implemented in Python.
 
-## 🌟 Implementation
+## 🌟 Features
 
-- Global keyboard event capture
-- Custom action mapping
-- JSON configuration
-- Background operation
+- Asynchronous keyboard event handling
+- Cofigurable hotkey-to-action mapping
+- JSON-based configuration management
+- Background operation with graceful shutdown
+- Comprehensive logging system
+- Type-safe implementation
 
 ## 🚀 Quick Start
 
-### Python Implementation
+### Installation
 
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
 # Run application
-python main.py
+python quickopen/main_app.py
 ```
 
 ## 📁 Project Structure
 
 ```
-QucikOpen/
+QuickOpen/
 ├── python/
 │   ├── quickopen/
 │   │   ├── module/
-│   │   └── scripts/
-│   ├── test.py
+│   │   │   ├── config.py
+│   │   │   └── actions.json
+│   │   ├── listener.py
+│   │   ├── action_handler.py
+│   │   └── main_app.py
+|   ├── quickopen-gui/
+|   | 
 │   └── requirements.txt
-└── docs/
-    └── Python.md
+└── README.md
 ```
 
 ## 🛠️ Development Setup
@@ -44,61 +50,71 @@ QucikOpen/
 
 ### Required Packages
 
-#### Python
-
 ```txt
 keyboard>=0.13.5
-pynput>=1.7.6
+asyncio
+typing
+logging
+pathlib
 ```
 
 ## 💡 Usage Examples
 
-### Python Configuration
+### Configuration Format
 
 ```json
 {
-    "Ctrl+Alt+N":
-    {
-        "id": 1,
-        "name": "Open vscode",
-        "command": "Code.exe"
-    },
-
-    "Ctrl+Shift+B":
-    {
-        "id": 2,
-        "name": "Open Browser",
-        "command": "Arc.exe"
-    }
+    "ctrl shift n": "code .",
+    "ctrl alt b": "chrome.exe",
+    "alt t": "wt.exe"
 }
 ```
 
-## 🔄 Features
+### Code Example
 
-### Common Features
+```python
 
-- Global shortcut detection
-- Custom action mapping
-- Configuration persistence
-- Background operation
+```
+
+## 🔄 Key Components
+
+### MainApp
+
+- Manages application lifecycle
+- Handles async task coordination
+- Provides graceful shutdown
+
+### Listener
+
+- Captures keyboard events asynchronously
+- Manages hotkey combinations
+- Implements customizable key ordering
+
+### ActionHandler
+
+- Executes commands based on hotkeys
+- Manages action configuration
+- Provides async operation support
+
+### Config
+
+- Handles JSON configuration
+- Supports both dict and list configurations
+- Implements auto-save functionality
 
 ## 🤝 Contributing
 
 1. Fork repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
+2. Create feature branch (`git checkout -b feature/YourFeature`)
+3. Commit changes (`git commit -m 'Add YourFeature'`)
+4. Push to branch (`git push origin feature/YourFeature`)
 5. Open Pull Request
-
-## 📚 Documentation
-
-[Python Documentation](docs/Python.md)
 
 ## 🐛 Issue Tracking
 
 Report bugs and request features through:
 
-- [GitHub Issues](https://github.com/iVoid1/Shortcut-Manager/issues)
+- [GitHub Issues](https://github.com/iVoid1/QuickOpen/issues)
 
 ## 📫 Contact
 
@@ -107,4 +123,4 @@ Report bugs and request features through:
 
 ---
 
-Made with by iVoid1
+Made with ❤️ by iVoid1

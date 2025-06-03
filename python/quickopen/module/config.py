@@ -1,8 +1,10 @@
-import sys
 import json
 import typing
-from typing import Any, Type
+import logging
+from pathlib import Path
+from typing import Any, Optional, Union, TypeVar, Dict, List
 
+T = TypeVar('T', Dict[Any, Any], List[Any])
 
 class Config:
     """A class for managing configuration files."""
@@ -14,28 +16,42 @@ class Config:
     def get_index(List:list[Any]|None, value:Any) -> int|None:
         return List.index(value) if List != None and value in List else None
 
-    def __init__(self, file_name:str = "config", dict_or_list: Type[dict[Any, Any]] | Type[list[Any]] | Any = Any, auto_save:bool = True):
-        """Initializes the Config object, loading the config file if it exists."""
+    def __init__(self, file_name: Union[str, Path], config_type: type = dict, auto_save: bool = True):
+        """Initializes the Config object, loading the config file if it exists.
 
-        self.file_name:str = file_name + ".json" if not file_name.endswith(".json") else file_name
-        self.type = dict_or_list
-        self.config:list[Any]|dict[Any, Any]|None = self.load_config()
-        self.auto_save:bool = auto_save
+        Args:
+            file_name: Path to configuration file
+            config_type: Expected type of configuration (dict or list)
+            auto_save: Whether to automatically save changes
+        """
+
+        self.logger = logging.getLogger(__name__)
+        self.file_name = Path(file_name)
+        if not self.file_name.suffix:
+            self.file_name = self.file_name.with_suffix('.json')
+            
+        self.type = config_type
+        self.auto_save = auto_save
+        self.config = self.load_config()
         
         
-    def load_config(self) -> list[Any]|dict[Any, Any]|None:
-        """Loads the configuration from the file."""
+    def load_config(self) -> Optional[T]:
+        """Loads the configuration from the file.
+
+        Returns:
+            Configuration data or None if loading fails
+        """
 
         try:
-            with open(self.file_name, 'r') as file:
-                return list(json.load(file)) if self.type == list else dict(json.load(file)) if self.type == dict else json.load(file)
-            
+            with self.file_name.open('r') as file:
+                data = json.load(file)
+                return self.type(data)
         except FileNotFoundError:
-            print(f"Config file {self.file_name} not found. Create a new one!")
-            sys.exit()
+            self.logger.error(f"Config file not found: {self.file_name}")
+            return None
         except json.JSONDecodeError:
-            print(f"Error decoding {self.file_name}. Using an empty config.")
-            sys.exit()
+            self.logger.error(f"Invalid JSON in config file: {self.file_name}")
+            return None
 
     def get_config(self, key_index:Any|int, default:Any = None) -> Any:
         """Retrieves a value from the config using a key (for dicts) or index (for lists)."""
@@ -72,14 +88,19 @@ class Config:
         return keys
         
     
-    def save_config(self) -> None:
+    def save_config(self) -> bool:
         """Saves the config to the file."""
+        if not self.config:
+            return False
+            
         try:
-            with open(self.file_name, 'w') as file:
+            with self.file_name.open('w') as file:
                 json.dump(self.config, file, indent=4)
+            return True
         except Exception as e:
-            print(f"Error saving the config file: {e}")
-    
+            self.logger.error(f"Failed to save config: {e}")
+            return False
+
     def remove_config(self, key_or_index:Any|int) -> bool|None:
         """Removes a key (for dicts) or index (for lists)."""
         if isinstance(self.config, dict):
