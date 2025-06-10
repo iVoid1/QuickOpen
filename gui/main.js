@@ -14,16 +14,17 @@ let win = null;
 
 
 function startPythonScript() {
-  const scriptPath = path.join(__dirname, 'quickopen.py');
+  const scriptPath = 'C:\\Users\\Void\\Google_Drive\\QuickOpen\\python\\main.py';
   console.log(`Starting Python script: ${scriptPath}`);
   
-  pyProc = spawn('python', [scriptPath], {
-    stdio: 'ignore',
-    detached: true
+  pyProc = spawn('python', [scriptPath]);
+
+  pyProc.stdout.on('data', (data) => {
+    console.log(`Python stdout: ${data.toString()}`);
   });
   
-  pyProc.on('error', (err) => {
-    console.error('Failed to start Python script:', err);
+  pyProc.stderr.on('data', (data) => {
+    console.error(`Python stderr: ${data.toString()}`);
   });
   
   pyProc.unref();
@@ -34,16 +35,16 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-	title: 'Quick Open GUI',
-	icon: path.join(__dirname, 'icon.png'),
-	show: true, // Start hidden
+  title: 'Quick Open GUI',
+  icon: path.join(__dirname, 'icon.png'),
+  show: true, // Start hidden
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
   });
   
-  win.loadFile('index.html');
+  win.loadFile('webUI/index.html');
   
   win.on('closed', () => {
     win = null;
@@ -61,7 +62,7 @@ function createTray() {
             if (win) {
               win.show();
             } 
-			else {
+      else {
               createWindow();
             }
           }
@@ -81,9 +82,9 @@ function createTray() {
   tray.setContextMenu(contextMenu);
   
   tray.on('click', () => {
-		tray.popUpContextMenu();
-		}
-	);
+    tray.popUpContextMenu();
+    }
+  );
 } 
 
 
@@ -102,7 +103,9 @@ app.whenReady().then(() =>
     
     createTray();
     console.log('Tray icon created');  
-  
+    pyProc.on('data', (data) => {
+      console.log('Received data from Python script:', data.toString());
+    });
 });
 app.on('window-all-closed', (e) => {
   e.preventDefault(); 

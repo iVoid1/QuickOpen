@@ -47,20 +47,6 @@ class MainApp:
         finally:
             await self.shutdown()
 
-    async def shutdown(self) -> None:
-        """Perform cleanup and shutdown tasks."""
-        self.running = False
-        
-        # Cancel all running tasks
-        for task in self._tasks:
-            if not task.done():
-                task.cancel()
-                try:
-                    await task
-                except asyncio.CancelledError:
-                    pass
-        
-        self.logger.info("Application shutdown complete")
 
     async def keyboard_monitor(self, stop: str = "alt+esc") -> None:
         """Monitor keyboard events continuously.
@@ -75,11 +61,21 @@ class MainApp:
             self.logger.error(f"Keyboard monitor error: {e}", exc_info=True)
             self.running = False
 
+    # ...existing code...
+
+# ...existing code...
+
     async def action_monitor(self) -> None:
         """Monitor and execute actions based on detected hotkeys."""
         try:
             self.logger.info("Started action monitoring...")
-            await self.action_handler.run_task_async(self.listener, running=self.running)
+            while self.running:
+                self.logger.info(self.listener.active_keys)
+                if self.listener.current_hotkey:  # Only process if there's an active hotkey
+                    self.logger.debug(f"Processing hotkey: {self.listener.current_hotkey}")
+                    await self.action_handler.run_task_async(self.listener.current_hotkey, self.running)
+                await asyncio.sleep(0.1)  # Small delay to prevent CPU overuse
+                
         except Exception as e:
             self.logger.error(f"Action monitor error: {e}", exc_info=True)
             self.running = False
@@ -96,19 +92,24 @@ class MainApp:
             self.logger.info(f"Added new action: {action} -> {command}")
         except Exception as e:
             self.logger.error(f"Failed to add action: {e}")
-
-def main() -> None:
-    """Main entry point for the application."""
-    config_path = Path(__file__).parent / "module" / "actions.json"
     
-    try:
-        app = MainApp(config_path)
-        asyncio.run(app.run())
-    except Exception as e:
-        logging.error(f"Application failed to start: {e}", exc_info=True)
-        raise
+    def show_config(self) :
+        """Display the current configuration."""
+        return self.action_handler.action_config.config
 
-if __name__ == "__main__":
-    main()
-
-
+    async def shutdown(self) -> None:
+        """Perform cleanup and shutdown tasks."""
+        self.running = False
+        
+        # Cancel all running tasks
+        for task in self._tasks:
+            if not task.done():
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+        
+        self.logger.info("Application shutdown complete")
+        
+main = MainApp("C:\\Users\\Void\\Google_Drive\\QuickOpen\\python\\quickopen\\module\\actions.json")

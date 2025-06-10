@@ -2,9 +2,10 @@ import json
 import typing
 import logging
 from pathlib import Path
-from typing import Any, Optional, Union, TypeVar, Dict, List
+from typing import Any, Union, TypeVar, Dict, List
 
-T = TypeVar('T', Dict[Any, Any], List[Any])
+
+
 
 class Config:
     """A class for managing configuration files."""
@@ -35,7 +36,7 @@ class Config:
         self.config = self.load_config()
         
         
-    def load_config(self) -> Optional[T]:
+    def load_config(self) -> Dict[Any, Any]|List[Any]|None:
         """Loads the configuration from the file.
 
         Returns:
@@ -44,8 +45,9 @@ class Config:
 
         try:
             with self.file_name.open('r') as file:
-                data = json.load(file)
-                return self.type(data)
+                return json.load(file)
+                
+            
         except FileNotFoundError:
             self.logger.error(f"Config file not found: {self.file_name}")
             return None
@@ -72,6 +74,19 @@ class Config:
             return self.get_index(self.config, keys)
         return default
     
+    def save_config(self) -> bool:
+        """Saves the config to the file."""
+        if not self.config:
+            return False
+            
+        try:
+            with self.file_name.open('w') as file:
+                json.dump(self.config, file, indent=4)
+            return True
+        except Exception as e:
+            self.logger.error(f"Failed to save config: {e}")
+            return False
+
     def add_config(self, keys:Any, value:Any = None):
         """Adds a key-value pair (for dicts) or appends a value (for lists)."""
         if self.config == None:
@@ -86,20 +101,6 @@ class Config:
         self.config.append(keys)
         self.save_config() if self.auto_save else None
         return keys
-        
-    
-    def save_config(self) -> bool:
-        """Saves the config to the file."""
-        if not self.config:
-            return False
-            
-        try:
-            with self.file_name.open('w') as file:
-                json.dump(self.config, file, indent=4)
-            return True
-        except Exception as e:
-            self.logger.error(f"Failed to save config: {e}")
-            return False
 
     def remove_config(self, key_or_index:Any|int) -> bool|None:
         """Removes a key (for dicts) or index (for lists)."""
@@ -114,10 +115,13 @@ class Config:
             self.save_config() if self.auto_save else None
             return True
         return False
-        
 
-    def update_config(self, keys: Any|int, new_value:Any|None = None, new_key:Any|None = None) -> bool:
+    def update_config(self, keys: Any|int, new_value:Any|None = None, new_key:Any|None = None) -> bool|None:
         """Updates a key's value (for dicts) or replaces an index (for lists)."""
+        if self.config == None:
+            print("No config found")
+            return None
+        
         if isinstance(self.config, dict) and keys in self.config:
             if new_value != None:
                 self.config[keys] = new_value
@@ -133,6 +137,7 @@ class Config:
             self.config.insert(keys, new_value)
             self.save_config() if self.auto_save else None
             return True
+        
         return False
     
     def merge_configs(self, other_config: object|dict[Any, Any]|list[Any]):

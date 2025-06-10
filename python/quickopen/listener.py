@@ -47,55 +47,34 @@ class Listener:
 
         try:
             if event.event_type == "down" and event.name not in self.active_keys:
-                self.active_keys.append(event.name)
-                self.current_hotkey = self.sort_keys()
-                self.logger.debug(f"Key pressed: {self.current_hotkey}")
+                self.active_keys.append(event.name.lower())
                 
+                self.active_keys = self.sort_keys(self.active_keys)
+                self.current_hotkey = " ".join(self.active_keys)
+                
+                
+                                
             elif event.event_type == "up" and event.name in self.active_keys:
                 self.active_keys.remove(event.name)
-                self.current_hotkey = self.sort_keys()
-
-            self.logger.debug(f"Active keys: {self.active_keys}")
-            self.logger.debug(f"Current hotkey: {self.current_hotkey}")
+                self.current_hotkey = " ".join(self.active_keys)
+                
         except ValueError as e:
             self.logger.error(f"Error processing keyboard event: {e}")
 
-    def sort_keys(self) -> str:
+    def sort_keys(self, keys) -> list[str]:
         """Sort keys according to preferred order.
         
         Returns:
             Sorted key combination as string
         """
-        combo_set = set(self.active_keys)
+        combo_set = set(keys)
         ordered = [key for key in self._preferred_order if key in combo_set]
         rest = sorted(combo_set - set(self._preferred_order))
-        self.active_keys = ordered + rest
-        return ' '.join(self.active_keys)
+        return ordered + rest
+        
 
     def clear_keys(self) -> None:
         """Reset active keys and current hotkey."""
         self.active_keys.clear()
         self.current_hotkey = ""
-
-    def block_key(self, key: str) -> None:
-        """Block a specific key from functioning.
         
-        Args:
-            key: Key to block
-        """
-        keyboard.block_key(key)
-        self.logger.debug(f"Blocked key: {key}")
-
-    def toggle_listening(self, enable: bool) -> None:
-        """Toggle keyboard listening on/off.
-        
-        Args:
-            enable: True to enable listening, False to disable
-        """
-        if enable and not self._hook:
-            self._hook = keyboard.hook(self.handle_event)
-            self.logger.info("Keyboard listening enabled")
-        elif not enable and self._hook:
-            keyboard.unhook(self._hook)
-            self._hook = None
-            self.logger.info("Keyboard listening disabled")

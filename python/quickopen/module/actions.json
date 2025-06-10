@@ -1,5 +1,26 @@
-{
-    "ctrl alt t": "wt.exe",
-    "ctrl alt v": "code",
-    "ctrl alt n": "notepad"
-}
+[
+    {
+        "action": "wt.exe",
+        "shortcut": "ctrl alt t"
+    },
+
+    {   
+        "action": "notepad.exe",
+        "shortcut": "ctrl alt n"
+    },
+
+    {
+        "action": "explorer.exe",
+        "shortcut": "ctrl alt e"
+    },
+
+    {
+        "action": "cmd.exe",
+        "shortcut": "ctrl alt c"
+    },
+
+    {
+        "action": "calc.exe",
+        "shortcut": "ctrl alt k"
+    }
+]
