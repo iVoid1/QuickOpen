@@ -14,7 +14,7 @@ let win = null;
 
 
 function startPythonScript() {
-  const scriptPath = 'C:\\Users\\Void\\Google_Drive\\QuickOpen\\python\\main.py';
+  const scriptPath = 'C:\\Users\\Void\\Google_Drive\\projects\\QuickOpen\\src\\main.py';
   console.log(`Starting Python script: ${scriptPath}`);
   
   pyProc = spawn('python', [scriptPath]);
@@ -44,7 +44,7 @@ function createWindow() {
     }
   });
   
-  win.loadFile('webUI/index.html');
+  win.loadURL('http://localhost:5173');;
   
   win.on('closed', () => {
     win = null;

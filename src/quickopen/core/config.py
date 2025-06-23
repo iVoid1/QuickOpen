@@ -2,7 +2,7 @@ import json
 import typing
 import logging
 from pathlib import Path
-from typing import Any, Union, TypeVar, Dict, List
+from typing import Any, Union, Dict, List
 
 
 
@@ -65,7 +65,7 @@ class Config:
         
         return default
     
-    def index_config(self, keys:Any, default:Any = None) -> int|Any:
+    def index_config(self, keys:Any, default:Any = None) -> int|Any|None:
         """Finds the index of a key in a dict or value in a list."""
         if isinstance(self.config, dict):
             return next((item[0] for item in enumerate(self.config) if item[1] == keys), default)

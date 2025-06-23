@@ -1,26 +1,26 @@
 [
     {
-        "action": "wt.exe",
+        "command": "wt.exe",
         "shortcut": "ctrl alt t"
     },
 
     {   
-        "action": "notepad.exe",
+        "command": "notepad.exe",
         "shortcut": "ctrl alt n"
     },
 
     {
-        "action": "explorer.exe",
+        "command": "explorer.exe",
         "shortcut": "ctrl alt e"
     },
 
     {
-        "action": "cmd.exe",
+        "command": "cmd.exe",
         "shortcut": "ctrl alt c"
     },
 
     {
-        "action": "calc.exe",
+        "command": "calc.exe",
         "shortcut": "ctrl alt k"
     }
 ]

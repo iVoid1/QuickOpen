@@ -4,6 +4,9 @@ from keyboard import KeyboardEvent
 import keyboard
 import asyncio
 
+
+
+               
 class Listener:
     """Handles keyboard event listening and hotkey detection."""
     
@@ -51,7 +54,7 @@ class Listener:
                 
                 self.active_keys = self.sort_keys(self.active_keys)
                 self.current_hotkey = " ".join(self.active_keys)
-                
+                print(event.scan_code)        
                 
                                 
             elif event.event_type == "up" and event.name in self.active_keys:
@@ -78,3 +81,9 @@ class Listener:
         self.active_keys.clear()
         self.current_hotkey = ""
         
+def main():
+    if __name__ == "__main__":
+        listener = Listener()
+        while True:
+            keyboard.hook(listener.handle_event)
+main()        
